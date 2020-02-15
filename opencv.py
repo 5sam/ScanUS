@@ -1,6 +1,9 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from camera import get_camera_line
+from transform import intersect
 import cv2
+import math
 def getcenter(contour):
     M = cv2.moments(contour)
     center_x = M['m10'] / M['m00']
@@ -8,7 +11,7 @@ def getcenter(contour):
     return [[center_x,center_y]]
 def main():
     cap = cv2.VideoCapture(0)
-    frame = cv2.imread('D:\_Udes\S4\Projet\ScanUS\Images/pi_test_loin.jpg', cv2.IMREAD_COLOR)
+    frame = cv2.imread('D:\_Udes\S4\Projet\ScanUS\Images/pi_test_proche.jpg', cv2.IMREAD_COLOR)
     cv2.namedWindow('gray',cv2.WINDOW_NORMAL)
     cv2.resizeWindow('gray', 400, 300)
     cv2.namedWindow('frame', cv2.WINDOW_NORMAL)
@@ -47,4 +50,6 @@ def main():
     #cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    main()
+    #main()
+    line = get_camera_line()
+    print(intersect(point_1 = line.get_pos(),vecteur_1=line.get_vector_in_referential([0,1,0]),point_2 = [1,0,0],vecteur_2 = [-1,12,-3]))

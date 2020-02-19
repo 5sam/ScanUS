@@ -3,33 +3,32 @@ import numpy as np
 from transform import Matrix, mult
 import cv2
 import glob
-from picamera import PiCamera
 
+try:
+    from picamera import PiCamera
+except:
+    1 + 1
 
-FOV_V = 10
-FOV_H = 10
-NB_PIXELS_V = 10 / 2
-NB_PIXELS_H = 10 / 2
-FOCALE_H = math.atan(NB_PIXELS_H / (FOV_H / 2))
-FOCALE_V = math.atan(NB_PIXELS_V / (FOV_V / 2))
+CAMERA_MATRIX = np.array([[964.28823421, 0.0, 513.256418],
+                 [0.0, 966.54236797, 372.50558502],
+                 [0.0, 0.0, 1.0]])
+DISTORTION_COEFF = np.array([[1.79814569e-01, -9.43894922e-01, -9.48703974e-04, 8.58610402e-04, 1.56358136e+00]])
 CAMERA_POS = [10, 6, 0]
 CAMERA_ANGLES = [0, 0, 0]
 
+def normalize_2D_point(x=0,y=0):
+    center = CAMERA_MATRIX[:2,2]
+    x = x-center[0]
+    y = y - center[1]
+    return x,y
 
-def find_line_angle(x, y):
-    point = [x - NB_PIXELS_H, y - NB_PIXELS_V]
-    angle_h = math.atan(point[0] / FOCALE_H)
-    angle_v = math.atan(point[1] / FOCALE_V)
-    return [angle_h, 0, angle_v]
+def get_red_dot_vector(x=0,y=0):
+    x,y = normalize_2D_point(x,y)
+
+    return
 
 
-def get_camera_line(angle_table=0,x=NB_PIXELS_H, y=NB_PIXELS_V):
-    angles = find_line_angle(x, y)
-    cam_matrix = get_camera_matrix(angle_table)
-    line_matrix = Matrix(angles=angles)
-    return mult([cam_matrix, line_matrix])
-
-def get_camera_matrix(angle_table=0):
+def get_camera_ext_matrix(angle_table=0):
     # The camera matrix should have its coordinate system with the y axis
     # pointing throught the center of the image
     angles = CAMERA_ANGLES
@@ -38,7 +37,8 @@ def get_camera_matrix(angle_table=0):
     result_matrix = mult([floor_matrix, cam_matrix])
     return result_matrix
 
-def find_point_in_frame(frame,show=False):
+
+def find_point_in_frame(frame, show=False):
     if show:
         cv2.namedWindow('gray', cv2.WINDOW_NORMAL)
         cv2.resizeWindow('gray', 400, 300)
@@ -64,7 +64,7 @@ def find_point_in_frame(frame,show=False):
         print(centers)
         cv2.waitKey(0)
 
-    return centers
+    return centers[0]
 
 
 def take_pictures():
@@ -73,13 +73,13 @@ def take_pictures():
         images = glob.glob('D:\_Udes\S4\Projet\ScanUS\Calibration/*.png')
         picure_index = len(images)
 
-        while (True):
-            camera.start_prewiew()
-            key = input()
-            camera.capture('image_' + str(picure_index) + '.png')
-            picure_index += 1
-            if key == 'q':
-                break
+    while (True):
+        camera.start_preview()
+        key = input()
+        camera.capture('image_' + str(picure_index) + '.png')
+        picure_index += 1
+        if key == 'q':
+            break
         pass
 
 
@@ -87,4 +87,4 @@ def getcenter(contour):
     M = cv2.moments(contour)
     center_x = M['m10'] / M['m00']
     center_y = M['m01'] / M['m00']
-    return [[center_x,center_y]]
+    return [[center_x, center_y]]

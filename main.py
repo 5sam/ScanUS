@@ -7,7 +7,8 @@ import cv2
 import math
 
 def main():
-    camera.get_red_dot_vector()
+    frame = cv2.imread('D:\_Udes\S4\Projet\ScanUS\Images/pi_test_proche.jpg')
+    camera.find_red_dot(frame)
 
 if __name__ == "__main__":
     main()

@@ -2,6 +2,7 @@ import math
 import numpy as np
 from transform import Matrix, mult
 import cv2
+import time
 import glob
 
 try:
@@ -24,7 +25,11 @@ def normalize_2D_point(x=0,y=0):
 
 def get_red_dot_vector(x=0,y=0):
     x,y = normalize_2D_point(x,y)
-
+    # A = RB
+    # A is position in image (in pixels)
+    # R is camera matrix (units in pixels)
+    # B is position in real (units in mm)
+    CAMERA_MATRIX
     return
 
 
@@ -38,7 +43,8 @@ def get_camera_ext_matrix(angle_table=0):
     return result_matrix
 
 
-def find_point_in_frame(frame, show=False):
+def find_red_dot(frame, show=False):
+    start = time.time()
     if show:
         cv2.namedWindow('gray', cv2.WINDOW_NORMAL)
         cv2.resizeWindow('gray', 400, 300)
@@ -55,6 +61,8 @@ def find_point_in_frame(frame, show=False):
             if show:
                 cv2.circle(frame, (int(center[0][0]), int(center[0][1])), 4, (0, 0, 255), -1)
                 cv2.drawContours(frame, contour, -1, [255, 0, 0], 2)
+    end = time.time()
+    print('time to find red dot : ', end-start)
     if show:
         # Bitwise-AND mask and original image
         res = cv2.bitwise_and(frame, frame, mask=mask)
@@ -66,8 +74,7 @@ def find_point_in_frame(frame, show=False):
 
     return centers[0]
 
-
-def take_pictures():
+def take_pictures_pi():
     with PiCamera() as camera:
         camera.resolution = (1024,768)
         images = glob.glob('D:\_Udes\S4\Projet\ScanUS\Calibration/*.png')

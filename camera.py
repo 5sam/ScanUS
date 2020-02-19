@@ -68,18 +68,19 @@ def find_point_in_frame(frame,show=False):
 
 
 def take_pictures():
-    camera = PiCamera()
-    camera.resolution = (1024,768)
-    images = glob.glob('D:\_Udes\S4\Projet\ScanUS\Calibration/*.png')
-    picure_index = len(images)
+    with PiCamera() as camera:
+        camera.resolution = (1024,768)
+        images = glob.glob('D:\_Udes\S4\Projet\ScanUS\Calibration/*.png')
+        picure_index = len(images)
 
-    while (True):
-        camera.start_prewiew()
-        key = input()
-        camera.capture('image_' + str(picure_index) + '.png')
-        picure_index += 1
-        if key == 'q':
-            break
+        while (True):
+            camera.start_prewiew()
+            key = input()
+            camera.capture('image_' + str(picure_index) + '.png')
+            picure_index += 1
+            if key == 'q':
+                break
+        pass
 
 
 def getcenter(contour):

@@ -22,6 +22,8 @@ Copyright (c) 2012-2013 Matplotlib Development Team; All Rights Reserved
 Copyright 2013-2015 Dave Jones
 Copyright © 2005-2020, NumPy Developers.
 All rights reserved.
+Copyright (c) 2015 Raspberry Pi (Trading) Ltd.
+All rights reserved.
 Third party copyrights are property of their respective owners.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

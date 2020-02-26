@@ -3,6 +3,7 @@ import math
 
 
 class Matrix:
+    # Angles computation order is angle_z -> angle_y -> angle_x
     def __init__(self, pos=[0, 0, 0], angles=[0, 0, 0], matrix=None):
         if matrix is None:
             pos = np.array([pos])
@@ -15,7 +16,7 @@ class Matrix:
 
     def get_angle_matrix(self, angles=[0, 0, 0]):
         try:
-            return self.matrix[0:3,0:3]
+            return self.matrix[0:3, 0:3]
         except:
             [tx, ty, tz] = angles
             matrix_tz = np.array([[math.cos(tz), -math.sin(tz), 0],
@@ -34,11 +35,9 @@ class Matrix:
     def get_pos(self):
         return self.matrix[:-1, 3]
 
-
-    def get_vector_in_referential(self,vector):
+    def get_vector_in_referential(self, vector):
         rotation_matrix = self.get_angle_matrix()
-        return np.dot(rotation_matrix,vector)
-
+        return np.dot(rotation_matrix, vector)
 
     def __repr__(self):
         out = ''
@@ -56,14 +55,15 @@ def mult(matrices):
     return Matrix(matrix=result)
 
 
-def intersect(point_1 = np.array([0,0,0]),vecteur_1  = np.array([0,0,0]),point_2  = np.array([0,0,0]),vecteur_2  = np.array([0,0,0])):
-    vecteur_3 = np.cross(vecteur_2,vecteur_1)
+def intersect(point_1=np.array([0, 0, 0]), vecteur_1=np.array([0, 0, 0]), point_2=np.array([0, 0, 0]),
+              vecteur_2=np.array([0, 0, 0])):
+    vecteur_3 = np.cross(vecteur_2, vecteur_1)
     vecteur_2 = np.array([-i for i in vecteur_2])
-    A = np.array([vecteur_1,vecteur_2,vecteur_3]).T
+    A = np.array([vecteur_1, vecteur_2, vecteur_3]).T
     answer = np.array([point_2[i] - point_1[i] for i in range(3)])
     B = np.array(answer)
-    [t1,t2,t3] = np.dot(np.linalg.inv(A),B)
-    point_3 = [t1*vecteur_1[i] + point_1[i] for i in range(3)]
-    midpoint =[point_3[i] + t3/2*vecteur_3[i] for i in range(3)]
-    length = abs(np.linalg.norm(vecteur_3)*t3)
-    return midpoint,length
+    [t1, t2, t3] = np.dot(np.linalg.inv(A), B)
+    point_3 = [t1 * vecteur_1[i] + point_1[i] for i in range(3)]
+    midpoint = [point_3[i] + t3 / 2 * vecteur_3[i] for i in range(3)]
+    length = abs(np.linalg.norm(vecteur_3) * t3)
+    return midpoint, length

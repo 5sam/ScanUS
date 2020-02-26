@@ -1,17 +1,27 @@
 import numpy as np
-from matplotlib import pyplot as plt
+import time
 import camera
+import plot
 from calibration import calib_camera
 from transform import intersect
 import cv2
 import math
 
 def main():
-    1+1
+    points_3d = []
+    size = 10
+    plot.init()
+    for i in range(size):
+        for j in range(size):
+            for k in range(size):
+                points_3d += [[i,j, k]]
+            plot.plot(points_3d)
+            points_3d = []
+
+
+
+
+
 
 if __name__ == "__main__":
-    #main()
-    camera.take_pictures()
-    #calib_camera()
-    #line = get_camera_line()
-    #print(intersect(point_1 = line.get_pos(),vecteur_1=line.get_vector_in_referential([0,1,0]),point_2 = [1,0,0],vecteur_2 = [-1,12,-3]))
+    main()

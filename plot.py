@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+# To reduce latency, points should be plotted by chunks
 def plot(points_3D):
     ax = plt.gca()
     for element in points_3D:

@@ -11,7 +11,7 @@ Projet de session robotique S4 robot scanneur
 - Repeat for new image and table angle
 - Use plot() from plot.py to visualize the point cloud
 
-## Setting up the Pi:
+## Setting up the Pi
 ### Material needed:
 - A Raspberry Pi 3B/3B+
 - A working internet connection

@@ -48,6 +48,7 @@ class Matrix:
         return out
 
 
+# inputs a list of matrices to multiply in that particular order
 def mult(matrices):
     result = matrices[0].matrix
     for m in matrices[1:]:

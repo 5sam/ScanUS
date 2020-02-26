@@ -1,5 +1,5 @@
 # ScanUS
-Projet de session robotique S4 robot scanneur
+4th semester project of Robotics Engineering at **Université de Sherbrooke**
 
 ## Code
 ### Common usage
@@ -10,6 +10,13 @@ Projet de session robotique S4 robot scanneur
 - Use intersect() to find the intersection point between the two lines
 - Repeat for new image and table angle
 - Use plot() from plot.py to visualize the point cloud
+### Note
+- The camera must have its y axis pointing towards the center of the image when calculating the **CAMERA_POS** and **CAMERA_ANGLES** 
+## Calibration
+- To calibrate the intrinsic parameters of your Picamera, you should take at least 20-30 pictures of a calibration grid
+- Chessboard calibration grid patterns can be found [here](https://markhedleyjones.com/projects/calibration-checkerboard-collection)
+- The parameters of the chosen grid can be set in the calibration.py header or can be inputs when you call calib_camera()
+- The outputed values of **mtx** and **dist** should then be written in the header of camera.py
 
 ## Setting up the Pi
 ### Material needed:
@@ -25,7 +32,7 @@ An Pi image with a compiled version of OpenCV was included to make the installat
 The manual compilation will be explained further bellow. 
 
 ### Recommended installation:
-1. Download the image of the Pi contained in the link.
+1. Download the image of the Pi contained in the [link](currently missing)
 2. Install BalenaEtcher to flash the image to your microSD card.
 3. All of the libraries used will already be installed. So the installation is now complete.
 4. To use the virtual environment. Type the following commands into the terminal:
@@ -43,8 +50,7 @@ sudo pip install opencv-contrib-python
 If there installation begins. SKIP to step 6.
 2. To manually install/compile OpenCV an internet guide will be used with a few changes. Note that any 
 version can be installed. The guide installs version 4.0.0 but we installed the lastest version as of today (4.2.0).
-3. The guide can be found here: 
-https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/?fbclid=IwAR2Ive8JRk1Rmsd-L2Q14sKA6e-RKXLADuGuhVXQ_LvJyMGnPrbBibMMPN0
+3. The guide can be found [here](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/?fbclid=IwAR2Ive8JRk1Rmsd-L2Q14sKA6e-RKXLADuGuhVXQ_LvJyMGnPrbBibMMPN0)
 4. First change to be aware of. make -j4 command should be used as stated in the guide. Be careful, our Pi
 3B+ managed to overheat during the installation despite having a heatsink. If you have a fan, make it blow air 
 towards your Pi to keep it cool. It is possible for your Pi to shutdown or throttle if it is not cooled properly 

@@ -78,7 +78,7 @@ void setup()
     Serial.println("Succeed to change wheel mode");
   }
 }
-
+// change the received command into an integer from 1 to 4
 int convert_command(String command) {
     //Serial.println(command);
     int command_number;
@@ -100,28 +100,35 @@ int convert_command(String command) {
 void loop() {
   uint8_t dxl_id = DXL_ID;
   int32_t Position = 0;
+
+  //get the command from serial port
   if (Serial.available() > 0) {
     String command = Serial.readString();
     int command_number = convert_command(command);
     switch (command_number){
+
+      //start
       case 1:
         //Serial.println("Running");
         dxl_wb.wheelMode(dxl_id, 0);
         dxl_wb.goalVelocity(dxl_id, (int32_t)10);
         break;
 
+      //stop
       case 2:
         //Serial.println("Stop");
         dxl_wb.wheelMode(dxl_id, 0);
         dxl_wb.goalVelocity(dxl_id, (int32_t)0);
         break;
 
+      //restart
       case 3:
         //Serial.println("Restarting");
         dxl_wb.jointMode(dxl_id, 0, 0);
         dxl_wb.goalPosition(dxl_id, (int32_t)0);
         break;
 
+      //error in the command
       case 4:
         //Serial.println("Wrong command");
         break;
@@ -131,6 +138,7 @@ void loop() {
     }
   }
   else{
+    //send the motor angle through the serial port
     dxl_wb.getPresentPositionData(dxl_id, &Position);
     Position = Position%4095;
     float angle = Position*2*PI/NOMBRE_TIC;

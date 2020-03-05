@@ -14,8 +14,8 @@ CAMERA_MATRIX = np.array([[964.28823421, 0.0, 513.256418],
                           [0.0, 966.54236797, 372.50558502],
                           [0.0, 0.0, 1.0]])
 DISTORTION_COEFF = np.array([[1.79814569e-01, -9.43894922e-01, -9.48703974e-04, 8.58610402e-04, 1.56358136e+00]])
-CAMERA_POS = [10, 6, 0]
-CAMERA_ANGLES = [0, 0, 0]
+CAMERA_POS = [0, 400, 130]
+CAMERA_ANGLES = [0, 0, -3.14]
 
 
 def normalize_2D_point(x=0, y=0):
@@ -51,7 +51,7 @@ def get_red_dot_point_vector_in_world(angle_table=0, x_image=0, y_image=0):
     m_red_dot_world_ref = mult([m_cam_ext, m_red_dot_cam_ref])
     p_red_dot_world_ref = m_red_dot_world_ref.get_pos()
     p_cam_world_ref = m_cam_ext.get_pos()
-    vector = list(map(operator.sub, p_red_dot_world_ref, p_cam_world_ref))
+    vector = list(p_red_dot_world_ref- p_cam_world_ref)
     return point, vector
 
 
@@ -76,11 +76,11 @@ def find_red_dot(frame, show=False):
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     centers = []
-    # Threshold the HSV image to get only blue colors
     mask = cv2.inRange(gray, 240, 255, 0)
     contours, hier = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     for contour in contours:
-        if cv2.contourArea(contour) > 500:
+        print(cv2.contourArea(contour))
+        if cv2.contourArea(contour) > 1 and cv2.contourArea(contour) < 100:
             center = getcenter(contour)
             centers += center
             if show:
@@ -96,24 +96,36 @@ def find_red_dot(frame, show=False):
         cv2.imshow('mask', mask)
         print(centers)
         cv2.waitKey(0)
+    if centers:
+        return centers[0][0], centers[0][1]
 
-    return centers[0][0], centers[0][1]
+def init_picamera():
+    camera = PiCamera()
+    camera.resolution = (1024,768)
+    camera.iso = 100
+    camera.start_preview()
+    return camera
 
-
+def take_one_picture_pi(camera):
+    image = np.empty((768,1024,3),dtype = np.uint8)
+    camera.capture(image,'bgr')
+    image = image.reshape((768,1024,3))
+    return image
+    
 def take_pictures_pi():
     with PiCamera() as camera:
         camera.resolution = (1024, 768)
         images = glob.glob('D:\_Udes\S4\Projet\ScanUS\Calibration/*.png')
         picure_index = len(images)
 
-    while (True):
-        camera.start_preview()
-        key = input()
-        camera.capture('image_' + str(picure_index) + '.png')
-        picure_index += 1
-        if key == 'q':
-            break
-        pass
+        while (True):
+            camera.start_preview()
+            key = input()
+            camera.capture('image_' + str(picure_index) + '.png')
+            picure_index += 1
+            if key == 'q':
+                break
+            pass
 
 
 def getcenter(contour):

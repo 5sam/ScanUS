@@ -102,7 +102,14 @@ def find_red_dot(frame, show=False):
 def init_picamera():
     camera = PiCamera()
     camera.resolution = (1024,768)
-    camera.iso = 100
+    camera.iso = 100 #entre 100 et 800 (high light to low light)
+    #wait for automatic gain control to settle
+    time.sleep(2)
+    camera.shutter_speed = camera.exposure_speed
+    camera.exposure_mode = 'off'
+    gain = camera.awb_gains
+    camera.awb_mode = 'off'
+    camera.awb_gains = gain
     camera.start_preview()
     return camera
 

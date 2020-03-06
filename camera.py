@@ -51,7 +51,7 @@ def get_red_dot_point_vector_in_world(angle_table=0, x_image=0, y_image=0):
     m_red_dot_world_ref = mult([m_cam_ext, m_red_dot_cam_ref])
     p_red_dot_world_ref = m_red_dot_world_ref.get_pos()
     p_cam_world_ref = m_cam_ext.get_pos()
-    vector = list(p_red_dot_world_ref- p_cam_world_ref)
+    vector = list(p_red_dot_world_ref - p_cam_world_ref)
     return point, vector
 
 
@@ -99,6 +99,7 @@ def find_red_dot(frame, show=False):
     if centers:
         return centers[0][0], centers[0][1]
 
+
 def init_picamera():
     camera = PiCamera()
     camera.resolution = (1024,768)
@@ -113,12 +114,14 @@ def init_picamera():
     camera.start_preview()
     return camera
 
+
 def take_one_picture_pi(camera):
-    image = np.empty((768,1024,3),dtype = np.uint8)
-    camera.capture(image,'bgr')
-    image = image.reshape((768,1024,3))
+    image = np.empty((768, 1024, 3), dtype=np.uint8)
+    camera.capture(image, 'bgr')
+    image = image.reshape((768, 1024, 3))
     return image
-    
+
+
 def take_pictures_pi():
     with PiCamera() as camera:
         camera.resolution = (1024, 768)

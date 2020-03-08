@@ -32,9 +32,9 @@ def plot_thread(points, mutex, name,range):
     plt.ion()
     fig = plt.figure(num=name)
     ax = Axes3D(fig)
-    ax.set_xlim(-11, 11)
-    ax.set_ylim(-11, 11)
-    ax.set_zlim(-11, 11)
+    ax.set_xlim(-100, 100)
+    ax.set_ylim(-100, 100)
+    ax.set_zlim(100, 200)
     while True:
         plt.pause(1 / 1000000)
         if points:

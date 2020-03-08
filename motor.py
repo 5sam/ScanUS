@@ -2,7 +2,7 @@ import serial as serial
 import time
 
 # open the serial communication
-COMMUNICATION_PORT = serial.Serial('COM6', 9600, timeout=.3)
+COMMUNICATION_PORT = serial.Serial('/dev/ttyACM0', 9600, timeout=.3)
 
 
 # give you back the motor angle
@@ -17,15 +17,15 @@ def get_angle_motor():
 
 
 # start the motor
-def start_moteur():
+def start_motor():
     COMMUNICATION_PORT.write(bytes(b'run\n'))
 
 
 # stop the motor
-def stop_moteur():
+def stop_motor():
     COMMUNICATION_PORT.write(bytes(b'stop\n'))
 
 
 # make the motor go to position 0 then stop it
-def restart_moteur():
+def restart_motor():
     COMMUNICATION_PORT.write(bytes(b'restart\n'))

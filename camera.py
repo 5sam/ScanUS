@@ -14,7 +14,7 @@ CAMERA_MATRIX = np.array([[964.28823421, 0.0, 513.256418],
                           [0.0, 966.54236797, 372.50558502],
                           [0.0, 0.0, 1.0]])
 DISTORTION_COEFF = np.array([[1.79814569e-01, -9.43894922e-01, -9.48703974e-04, 8.58610402e-04, 1.56358136e+00]])
-CAMERA_POS = [0, 400, 130]
+CAMERA_POS = [20, 480, 130]
 CAMERA_ANGLES = [0, 0, -3.14]
 
 
@@ -80,7 +80,7 @@ def find_red_dot(frame, show=False):
     contours, hier = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     for contour in contours:
         print(cv2.contourArea(contour))
-        if cv2.contourArea(contour) > 1 and cv2.contourArea(contour) < 100:
+        if cv2.contourArea(contour) > 0 and cv2.contourArea(contour) < 100:
             center = getcenter(contour)
             centers += center
             if show:
@@ -98,7 +98,9 @@ def find_red_dot(frame, show=False):
         cv2.waitKey(0)
     if centers:
         return centers[0][0], centers[0][1]
-
+    else:
+        return 0, 0
+        
 
 def init_picamera():
     camera = PiCamera()

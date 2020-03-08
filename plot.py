@@ -1,13 +1,36 @@
 import numpy as np
 from matplotlib import pyplot as plt
-
+from matplotlib import cm
+from matplotlib import colors
+import multiprocessing
 from mpl_toolkits.mplot3d import Axes3D
 import time
 
 
-def plot(points, mutex):
+class Plot:
+
+    def __init__(self, name,range = [0,100]):
+        # this can last about 1 sec
+        self.m = multiprocessing.Manager()
+        self.mutex = self.m.Lock()
+        self.points = self.m.list()
+        self.t = multiprocessing.Process(target=plot_thread, args=(self.points, self.mutex, name,range))
+        self.t.start()
+
+    def close(self):
+        self.t.terminate()
+
+    def add_point(self, point):
+        self.mutex.acquire()
+        self.points += [point]
+        self.mutex.release()
+
+
+def plot_thread(points, mutex, name,range):
+    norm = colors.Normalize(vmin=range[0],vmax=range[1])
+    f2rgb = cm.ScalarMappable(norm = norm,cmap=cm.get_cmap('gnuplot'))
     plt.ion()
-    fig = plt.figure()
+    fig = plt.figure(num=name)
     ax = Axes3D(fig)
     ax.set_xlim(-11, 11)
     ax.set_ylim(-11, 11)
@@ -25,6 +48,5 @@ def plot(points, mutex):
                 x = element[0]
                 y = element[1]
                 z = element[2]
-                ax.scatter(x, y, z)
-
-
+                error = element[3]
+                ax.scatter(x, y, z,color=f2rgb.to_rgba(error))

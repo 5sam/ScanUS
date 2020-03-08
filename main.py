@@ -6,7 +6,6 @@ from calibration import calib_camera
 from transform import intersect
 import cv2
 import math
-import multiprocessing
 
 
 def main_pi():
@@ -30,26 +29,23 @@ def main_pi():
 
 
 def main_pc():
-    m = multiprocessing.Manager()
-    mutex = multiprocessing.Lock()
-    points = m.list()
-    t = multiprocessing.Process(target=plot.plot,args=(points,mutex))
-    t.start()
+    s = time.time()
+    my_plot = plot.Plot(name = 'main plot',range=[0,10])
+    my_plot2 = plot.Plot(name = 'inverse plot',range=[0,10])
+    e = time.time()
+    print(e-s)
     size = 10
-
-    time.sleep(1)
     print(size)
     for i in range(size):
         for j in range(size):
             for k in range(size):
-                mutex.acquire()
-                points += [[i,j,k]]
-                mutex.release()
-            time.sleep(0.01)
+                my_plot.add_point([i, j, k,i])
+                my_plot2.add_point([-i, -j, -k,k])
+                #time.sleep(.01)
 
     input()
-    print(points)
-    t.terminate()
+    my_plot.close()
+    my_plot2.close()
 
 if __name__ == "__main__":
     main_pc()

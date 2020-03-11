@@ -27,8 +27,13 @@
 #define NOMBRE_TIC 4096
 #define BAUDRATE   57600
 #define DXL_ID     101
+#define laser_pin 4 // pin 4 on board
+#define laser_5V  6 // pin 6 on board
 
 DynamixelWorkbench dxl_wb;
+
+void laser_ON(void);
+void laser_OFF(void);
 
 void setup() 
 {
@@ -77,6 +82,10 @@ void setup()
   {
     Serial.println("Succeed to change wheel mode");
   }
+  pinMode(laser_pin, OUTPUT)
+  pinMode(laser_PWR, OUTPUT)
+  digitalWrite(laser_PWR, HIGH);
+  laser_OFF();
 }
 // change the received command into an integer from 1 to 4
 int convert_command(String command) {
@@ -97,10 +106,17 @@ int convert_command(String command) {
     return command_number;
 }
 
+void laser_ON(){
+  digitalWrite(laser_pin, HIGH);
+}
+
+void laser_OFF(){
+ digitalWrite(laser_pin, HIGH);
+}
+
 void loop() {
   uint8_t dxl_id = DXL_ID;
   int32_t Position = 0;
-
   //get the command from serial port
   if (Serial.available() > 0) {
     String command = Serial.readString();
@@ -110,6 +126,7 @@ void loop() {
       //start
       case 1:
         //Serial.println("Running");
+        laser_ON();
         dxl_wb.wheelMode(dxl_id, 0);
         dxl_wb.goalVelocity(dxl_id, (int32_t)10);
         break;
@@ -117,6 +134,7 @@ void loop() {
       //stop
       case 2:
         //Serial.println("Stop");
+        laser_OFF();
         dxl_wb.wheelMode(dxl_id, 0);
         dxl_wb.goalVelocity(dxl_id, (int32_t)0);
         break;
@@ -124,6 +142,7 @@ void loop() {
       //restart
       case 3:
         //Serial.println("Restarting");
+        laser_OFF();
         dxl_wb.jointMode(dxl_id, 0, 0);
         dxl_wb.goalPosition(dxl_id, (int32_t)0);
         break;

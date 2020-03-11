@@ -83,8 +83,8 @@ void setup()
     Serial.println("Succeed to change wheel mode");
   }
   pinMode(laser_pin, OUTPUT)
-  pinMode(laser_PWR, OUTPUT)
-  digitalWrite(laser_PWR, HIGH);
+  pinMode(laser_5V, OUTPUT)
+  digitalWrite(laser_5V, HIGH);
   laser_OFF();
 }
 // change the received command into an integer from 1 to 4

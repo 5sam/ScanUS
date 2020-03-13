@@ -3,6 +3,7 @@ import time
 
 # open the serial communication
 COMMUNICATION_PORT = serial.Serial('/dev/ttyACM0', 9600, timeout=.3)
+#COMMUNICATION_PORT = serial.Serial('COM6', 9600, timeout=.3)
 
 
 # give you back the motor angle

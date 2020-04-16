@@ -1,10 +1,12 @@
 import serial as serial
 import time
 
-#We need roughly 1.5 seconds between 2 different commands, except for the get_angle_motor function
+# We need roughly 1.5 seconds between 2 different commands, except for the get_angle_motor function
 
 # open the serial communication
-#COMMUNICATION_PORT = serial.Serial('/dev/ttyACM0', 9600, timeout=.3)
+# line under is for raspberrypi
+# COMMUNICATION_PORT = serial.Serial('/dev/ttyACM0', 9600, timeout=.3)
+# line under is for PC
 COMMUNICATION_PORT = serial.Serial('COM6', 9600, timeout=.3)
 
 

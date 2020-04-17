@@ -202,6 +202,9 @@ void loop() {
         //start
         case 1:
           laser_ON();
+          if (motor_argument_int > 500){
+             motor_argument_int = 1000 - motor_argument_int;
+          }
           dxl_wb.wheelMode(motor_number_int, 0);
           dxl_wb.goalVelocity(motor_number_int, (int32_t)motor_argument_int);
           break;

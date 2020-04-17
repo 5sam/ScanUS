@@ -35,8 +35,10 @@ def get_angle_motor(motor_number):
         return angle_rad3
 
 
-# start the motor at designated speed, speed must be between -265 and 265
-def start_motor(motor_number, speed):
+# start the motor at designated speed, speed must be between 0 and 265, input normal or reverse for sens
+def start_motor(motor_number, speed, sens):
+    if sens == "reverse":
+        speed = speed + 1000
     bytenumber = str(motor_number) + "-start-" + str(speed) + "\n"
     COMMUNICATION_PORT.write(bytes(bytenumber, 'utf-8'))
 
@@ -53,6 +55,5 @@ def position_motor(motor_number, angle):
 
     bytenumber = str(motor_number) + "-position-" + str(number) + "\n"
     COMMUNICATION_PORT.write(bytes(bytenumber, 'utf-8'))
-
 
 

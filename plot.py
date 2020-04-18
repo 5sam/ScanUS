@@ -9,12 +9,13 @@ import time
 
 class Plot:
 
-    def __init__(self, name,range = [0,100]):
+    def __init__(self, name, range=[0, 10]):
         # this can last about 1 sec
         self.m = multiprocessing.Manager()
         self.mutex = self.m.Lock()
         self.points = self.m.list()
-        self.t = multiprocessing.Process(target=plot_thread, args=(self.points, self.mutex, name,range))
+        self.fig = self.m.SimpleO()
+        self.t = multiprocessing.Process(target=plot_thread, args=(self.points, self.mutex,self.fig, name, range))
         self.t.start()
 
     def close(self):
@@ -26,15 +27,27 @@ class Plot:
         self.mutex.release()
 
 
-def plot_thread(points, mutex, name,range):
-    norm = colors.Normalize(vmin=range[0],vmax=range[1])
-    f2rgb = cm.ScalarMappable(norm = norm,cmap=cm.get_cmap('gnuplot'))
+class SimpleO():
+    def __init__(self):
+        self.fig = None
+
+    def get_fig(self):
+        return self.fig
+
+    def set_fig(self, _fig):
+        self.fig = _fig
+
+
+def plot_thread(points, mutex,shared_fig, name, range):
+    norm = colors.Normalize(vmin=range[0], vmax=range[1])
+    f2rgb = cm.ScalarMappable(norm=norm, cmap=cm.get_cmap('gnuplot'))
     plt.ion()
     fig = plt.figure(num=name)
     ax = Axes3D(fig)
     ax.set_xlim(-100, 100)
     ax.set_ylim(-100, 100)
-    ax.set_zlim(100, 200)
+    ax.set_zlim(0, 400)
+    shared_fig.set(fig)
     while True:
         plt.pause(1 / 1000000)
         if points:
@@ -48,5 +61,8 @@ def plot_thread(points, mutex, name,range):
                 x = element[0]
                 y = element[1]
                 z = element[2]
-                error = element[3]
-                ax.scatter(x, y, z,color=f2rgb.to_rgba(error))
+                try:
+                    error = element[3]
+                except:
+                    error = 0
+                ax.scatter(x, y, z, color=f2rgb.to_rgba(error))

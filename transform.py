@@ -58,6 +58,7 @@ def mult(matrices):
 
 def intersect(point_1=np.array([0, 0, 0]), vecteur_1=np.array([0, 0, 0]), point_2=np.array([0, 0, 0]),
               vecteur_2=np.array([0, 0, 0])):
+    # P1 + t1*V1 + t3*V3 = P2 + t2*V2
     vecteur_3 = np.cross(vecteur_2, vecteur_1)
     vecteur_2 = np.array([-i for i in vecteur_2])
     A = np.array([vecteur_1, vecteur_2, vecteur_3]).T

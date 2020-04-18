@@ -112,8 +112,11 @@ int motor_command_to_int(String motor_command)
   if (motor_command == "position"){
     return 4;
   }
-  else {
+  if (motor_command == "level"){
     return 5;
+  }
+  else {
+    return 6;
   }
 }
 
@@ -150,9 +153,11 @@ void setup()
 }
 
 void loop() {
+  float angle = 0;
   uint8_t dxl_id1 = DXL_ID1;
   uint8_t dxl_id2 = DXL_ID2;
   uint8_t dxl_id3 = DXL_ID3;
+  int32_t Position = 0;
   int32_t Position1 = 0;
   int32_t Position2 = 0;
   int32_t Position3 = 0;
@@ -228,8 +233,36 @@ void loop() {
           dxl_wb.jointMode(motor_number_int, 0, 0);
           dxl_wb.goalPosition(motor_number_int, (int32_t)motor_argument_int);
           break;
-          
+
+          //level
         case 5:
+            dxl_wb.getPresentPositionData(motor_number_int, &Position);
+            angle = Position*2*PI/NOMBRE_TIC;
+            Serial.println(Position);
+            if (angle < motor_argument_int){
+              dxl_wb.wheelMode(motor_number_int, 0);
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)100);
+              while (angle + 0.25 < motor_argument_int){
+                dxl_wb.getPresentPositionData(motor_number_int, &Position);
+                angle = Position*2*PI/NOMBRE_TIC;
+                Serial.println(angle);
+              }
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+            }
+            else {
+              dxl_wb.wheelMode(motor_number_int, 0);
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)-100);
+              while (angle - 0.25 > motor_argument_int){
+                dxl_wb.getPresentPositionData(motor_number_int, &Position);
+                angle = Position*2*PI/NOMBRE_TIC;
+                Serial.println(angle);
+              }
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+            }
+          dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+          break;
+          
+        case 6:
           Serial.println("wrong motor command");
           break;
       }
@@ -241,7 +274,7 @@ void loop() {
     dxl_wb.getPresentPositionData(dxl_id2, &Position2);
     dxl_wb.getPresentPositionData(dxl_id3, &Position3);
     Position1 = Position1%4095;
-    Position2 = Position2%4095;
+    Position2 = Position2;
     Position3 = Position3%4095;
     float angle1 = Position1*2*PI/NOMBRE_TIC;
     float angle2 = Position2*2*PI/NOMBRE_TIC;

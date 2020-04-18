@@ -52,8 +52,12 @@ def stop_motor(motor_number):
 # make the motor go to input angle (in radian from 0 to 6.28)
 def position_motor(motor_number, angle):
     number = int(angle/2/3.1416*4096)
-
     bytenumber = str(motor_number) + "-position-" + str(number) + "\n"
     COMMUNICATION_PORT.write(bytes(bytenumber, 'utf-8'))
 
+
+# go to angle, 0 is the lowest
+def level_motor(angle):
+    bytenumber = "2-level-" + str(angle) + "\n"
+    COMMUNICATION_PORT.write(bytes(bytenumber, 'utf-8'))
 

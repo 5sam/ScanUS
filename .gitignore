@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 Photos_boite/
+*.png
 __pycache__/
 *.py[cod]
 *$py.class

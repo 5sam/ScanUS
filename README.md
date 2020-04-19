@@ -79,10 +79,10 @@ PyPI contains all the libraries used and will show the correct pip install comma
 each library.
 
 ## 3D Printer Settings
-  Each part was printed on a Creality Ender 3 and had diferent settings depending on the part.
+  Each part was printed on a Creality Ender 3 and had different settings depending on the part.
   The software used to slice the parts is Ultimaker Cura 4.5 and prints were all made on standard quality.
-  All supports or generated with the default overhang angle calculation from the software and all other settings
-  are the ones by default
+  All supports are generated with the default overhang angle calculation from the software and all other settings
+  are the ones by default.
   ### Mobile support
   - 20% infills
   - No Supports

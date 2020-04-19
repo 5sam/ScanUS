@@ -6,12 +6,11 @@ from calibration import calib_camera_int, calib_camera_ext
 from transform import intersect, Matrix, mult
 import cv2
 import math
-import tkinter as tk
-import gui
 # import motor
 import os
 import laser
-
+import tkinter as tk
+import gui
 
 def main_pi():
     ## Enter your code here
@@ -52,12 +51,11 @@ def main_pi():
 
 
 def main_pc():
-
     #code to activate GUI
     root = tk.Tk()
     root.title("ScanUS")
     app = gui.Application(master = root) 
-	
+
     folder = 'D:\_Udes\S4\Projet\ScanUS\Photos_boite/'
     files = os.listdir(folder)
     laser_angles = [-5, -3, -2, -1, -0.5, 0, 0.5, 1.5, 2, 3, 4]
@@ -88,7 +86,7 @@ def main_pc():
     my_plot.close()
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     #
     main_pc()
     #calib_camera_ext('D:\_Udes\S4\Projet\ScanUS\Calibration\Positions\92400939_675701339671843_4756966280806793216_n.png')

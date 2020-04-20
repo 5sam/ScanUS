@@ -108,3 +108,15 @@ each library.
   - Supports On
   - Extruder temp: 200
   - Bed temp: 55
+  ### Connector Bolt
+  - 35% infill
+  - Supports On
+  - Extruder temp: 200
+  - Bed temp: 55
+  - Bed plate adhesion: Brim (to reduce warping)
+  ### Connector Motor
+  - 35% infill
+  - Supports On
+  - Extruder temp: 200
+  - Bed temp: 55
+  - Bed plate adhesion: Brim (to reduce warping)

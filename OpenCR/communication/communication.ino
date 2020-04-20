@@ -29,9 +29,10 @@
 //DXL_ID3 motor id for the laser (XM) 110
 #define NOMBRE_TIC 4096
 #define BAUDRATE   57600
-#define DXL_ID1    110
+#define DXL_ID1    101
 #define DXL_ID2    224
 #define DXL_ID3    110
+//to set up the laser ON and OFF
 #define laser_pin 4 // pin 4 on board
 #define laser_5V  6 // pin 6 on board
 
@@ -81,6 +82,7 @@ void init_motor(int motor)
   }
 }
 
+//convert a string to an int
 int motor_number_to_int(String motor_number)
 {
   if (motor_number == "1"){
@@ -98,6 +100,7 @@ int motor_number_to_int(String motor_number)
   }
 }
 
+//convert a string to an int
 int motor_command_to_int(String motor_command)
 {
   if (motor_command == "start"){
@@ -120,6 +123,7 @@ int motor_command_to_int(String motor_command)
   }
 }
 
+//convert a string to an int
 int motor_argument_to_int(String motor_argument)
 {
   int argument = motor_argument.toInt();
@@ -138,8 +142,7 @@ void setup()
 {
   Serial.begin(9600);
   // uncomment next line to wait for Opening Serial Monitor
-  //while(!Serial); 
-
+  //while(!Serial);
   uint8_t dxl_id1 = DXL_ID1;
   uint8_t dxl_id2 = DXL_ID2;
   uint8_t dxl_id3 = DXL_ID3;
@@ -164,7 +167,6 @@ void loop() {
   
   //get the command from serial port
   if (Serial.available() > 0) {
-    //String command_received = Serial.readString();
     String command_received = Serial.readString();
     if(command_received != 0){
       //*************************************************************
@@ -189,7 +191,6 @@ void loop() {
          command_number = command_number + 1;
          if (command_number == 3){
            token = NULL;
-           //Serial.println("max iteration reached");
          }
       }
       //***************************************************************

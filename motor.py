@@ -1,7 +1,7 @@
 import serial as serial
 import time
 
-# We need roughly 1.5 seconds between 2 different commands, except for the get_angle_motor function
+# We need roughly 1.2 seconds between 2 different commands, except for the get_angle_motor function
 
 # open the serial communication
 # line under is for raspberrypi
@@ -10,6 +10,9 @@ import time
 COMMUNICATION_PORT = serial.Serial('COM6', 9600, timeout=.3)
 
 
+# motor 1 is for the plate
+# motor 2 is for the power screw
+# motor 3 is for the laser
 # give you back the motor angle of the input motor (1,2 or 3)
 def get_angle_motor(motor_number):
     COMMUNICATION_PORT.reset_input_buffer()
@@ -36,6 +39,7 @@ def get_angle_motor(motor_number):
 
 
 # start the motor at designated speed, speed must be between 0 and 265, input normal or reverse for sens
+# example: start_motor(1,200,"reverse")
 def start_motor(motor_number, speed, sens):
     if sens == "reverse":
         speed = speed + 1000
@@ -56,7 +60,9 @@ def position_motor(motor_number, angle):
     COMMUNICATION_PORT.write(bytes(bytenumber, 'utf-8'))
 
 
-# go to angle, 0 is the lowest
+# go to angle, 0 is the lowest, function used on the screw motor.
+# level_motor(4*pi) would result in 2 complete rotation, afterwise
+# level_motor(2*pi) would result in 1 complete rotation in the other sens.
 def level_motor(angle):
     bytenumber = "2-level-" + str(angle) + "\n"
     COMMUNICATION_PORT.write(bytes(bytenumber, 'utf-8'))

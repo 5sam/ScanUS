@@ -36,8 +36,8 @@ The manual compilation will be explained further bellow.
 2. Install BalenaEtcher to flash the image to your microSD card.
 3. All of the libraries used will already be installed. So the installation is now complete.
 4. To use the virtual environment. Type the following commands into the terminal:
-source ~/.profile
-workon cv 
+- source ~/.profile
+- workon cv 
 5. If you see (cv) on the command line. You are now working on the virtual environment set up to work with openCV. 
 6. Head to your project directory and run your code by calling your main:
 python file_name.py

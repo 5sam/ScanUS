@@ -1,1 +1,56 @@
-Les BOMs se trouvent dans les dessins d'assemblage
+
+Bill of matérial are in the drawing of assembly of Full_model.
+Model of standard part are found the on site of McMaster.
+Counsult https://www.mcmaster.com/ for more information.
+
+Assembly note :
+Cad of the XM430-W350-R.step is used as standin for the XM430-W350-T and the XL430-W240-T. 
+The XL430-W240-T is place at the base of the Rail. (see Lazer_stand.sldasm)
+Full_model depict reasonnable distance for the laser and camera, adjust position on the base and in the code if needed.
+Fix your open cr and Pi on the base if needed.
+Verifie the  flange on your motor and adjust the configuration of connector if needed.
+Laser_stand and turning_table may be placed on any surface, but we recommande fixing it to sheet of plywood 3/4
+
+
+## 3D Printer Settings
+  Each part was printed on a Creality Ender 3 and had different settings depending on the part.
+  The software used to slice the parts is Ultimaker Cura 4.5 and prints were all made on standard quality.
+  All supports are generated with the default overhang angle calculation from the software and all other settings
+  are the ones by default.
+  ### Mobile support
+  - 20% infills
+  - No Supports
+  - Extruder temp: 200
+  - Bed temp: 55
+  ### Turntable Support
+  - 20% infill
+  - Supports on
+  - Extruder temp: 200
+  - Bed temp: 55
+  ### Wheels
+  - 20% infill
+  - No Supports
+  - Extruder temp: 200
+  - Bed temp: 55
+  ### Spacers
+  - 50% infill
+  - No Supports
+  - Extruder temp: 200
+  - Bed temp: 55
+  ### Rail
+  - 65% infill
+  - Supports On
+  - Extruder temp: 200
+  - Bed temp: 55
+  ### Connector Bolt
+  - 35% infill
+  - Supports On
+  - Extruder temp: 200
+  - Bed temp: 55
+  - Bed plate adhesion: Brim (to reduce warping)
+  ### Connector Motor
+  - 35% infill
+  - Supports On
+  - Extruder temp: 200
+  - Bed temp: 55
+  - Bed plate adhesion: Brim (to reduce warping)

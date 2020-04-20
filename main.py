@@ -6,17 +6,17 @@ from calibration import calib_camera_int, calib_camera_ext
 from transform import intersect, Matrix, mult
 import cv2
 import math
-# import motor
+import motor
 import os
 import laser
 import tkinter as tk
 import gui
 
 def main_pi():
-    ## Enter your code here
+    # This code is obsolete
+    # This code needs to be changed with functions from laser.py if the actual laser tower is used
     my_plot = plot.Plot(name='main plot', range=[0, 10])
     laser_p = [0, 0, 180]
-    laser_avpef = [8, 30, 0]
     with camera.init_picamera() as cam:
         input()
         motor.start_motor()
@@ -51,11 +51,8 @@ def main_pi():
 
 
 def main_pc():
-    #code to activate GUI
-    root = tk.Tk()
-    root.title("ScanUS")
-    app = gui.Application(master = root) 
-
+    # this code uses pictures taken manualy
+    # this is not the correct way to use the code but because of COVID-19, the setup was not obtainable
     folder = 'D:\_Udes\S4\Projet\ScanUS\Photos_boite/'
     files = os.listdir(folder)
     laser_angles = [-5, -3, -2, -1, -0.5, 0, 0.5, 1.5, 2, 3, 4]
@@ -79,7 +76,7 @@ def main_pc():
             p, error = intersect(p1, v1, p2, v2)
             my_plot.add_point(p + [error])
 
-        if i > 2*32:
+        if i > 11*32:
             break
 
     input()
@@ -88,5 +85,6 @@ def main_pc():
 
 if __name__ == "__main__":
     #
-    main_pc()
-    #calib_camera_ext('D:\_Udes\S4\Projet\ScanUS\Calibration\Positions\92400939_675701339671843_4756966280806793216_n.png')
+    #main_pc()
+    calib_camera_ext('D:\_Udes\S4\Projet\ScanUS\Calibration\Positions\92400939_675701339671843_4756966280806793216_n.png')
+    #calib_camera_int()

@@ -1,22 +1,23 @@
 # ScanUS
 4th semester project of Robotics Engineering at **Université de Sherbrooke**
 
-## Code
-### Common usage
-- Open a picture containing a red dot using cv2.imread()
-- Find the red dot coordinates with find_red_dot() in camera.py
-- Calculate point and vector from camera to red dot using get_red_dot_point_vector_in_world() in camera.py 
-- Determine line of red_dot relative to the rotating table
-- Use intersect() to find the intersection point between the two lines
-- Repeat for new image and table angle
-- Use plot() from plot.py to visualize the point cloud
-### Note
-- The camera must have its y axis pointing towards the center of the image when calculating the **CAMERA_POS** and **CAMERA_ANGLES** 
+This project is a simple and cheap solution to 3D scanning
 ## Calibration
+### Intrinsic Parameters
 - To calibrate the intrinsic parameters of your Picamera, you should take at least 20-30 pictures of a calibration grid
 - Chessboard calibration grid patterns can be found [here](https://markhedleyjones.com/projects/calibration-checkerboard-collection)
 - The parameters of the chosen grid can be set in the calibration.py header or can be inputs when you call calib_camera()
 - The outputed values of **mtx** and **dist** should then be written in the header of camera.py
+### Extrinsic Parameters
+- To calibrate the extrinsic parameters of the camera, use calib_camera_ext() with a picture containing known positions in world
+- Enter known points in points_in_world array
+- Locate points in the same order using the zooming option if necessary (using **z** key)
+- Double-click to save point
+- Once all points are saved press **esc** to exit and plug the output to CAMERA_POS in camera.py if the error is acceptable
+- If the error is unacceptable, repeat this process with more known points
+
+### Note
+- The camera must have its y axis pointing towards the center of the image when calculating the **CAMERA_POS** and **CAMERA_ANGLES** 
 
 ## Setting up the Pi
 ### Material needed:
@@ -32,7 +33,7 @@ An Pi image with a compiled version of OpenCV was included to make the installat
 The manual compilation will be explained further bellow. 
 
 ### Recommended installation:
-1. Download the image of the Pi contained in the [link](currently missing)
+1. Download the image of the Pi contained in the [link](currently missing:we did not find a good way to share 32Gb)
 2. Install BalenaEtcher to flash the image to your microSD card.
 3. All of the libraries used will already be installed. So the installation is now complete.
 4. To use the virtual environment. Type the following commands into the terminal:

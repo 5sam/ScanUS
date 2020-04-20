@@ -14,8 +14,7 @@ class Plot:
         self.m = multiprocessing.Manager()
         self.mutex = self.m.Lock()
         self.points = self.m.list()
-        self.fig = self.m.SimpleO()
-        self.t = multiprocessing.Process(target=plot_thread, args=(self.points, self.mutex,self.fig, name, range))
+        self.t = multiprocessing.Process(target=plot_thread, args=(self.points, self.mutex, name, range))
         self.t.start()
 
     def close(self):
@@ -27,18 +26,7 @@ class Plot:
         self.mutex.release()
 
 
-class SimpleO():
-    def __init__(self):
-        self.fig = None
-
-    def get_fig(self):
-        return self.fig
-
-    def set_fig(self, _fig):
-        self.fig = _fig
-
-
-def plot_thread(points, mutex,shared_fig, name, range):
+def plot_thread(points, mutex, name, range):
     norm = colors.Normalize(vmin=range[0], vmax=range[1])
     f2rgb = cm.ScalarMappable(norm=norm, cmap=cm.get_cmap('gnuplot'))
     plt.ion()
@@ -46,8 +34,7 @@ def plot_thread(points, mutex,shared_fig, name, range):
     ax = Axes3D(fig)
     ax.set_xlim(-100, 100)
     ax.set_ylim(-100, 100)
-    ax.set_zlim(0, 400)
-    shared_fig.set(fig)
+    ax.set_zlim(0, 150)
     while True:
         plt.pause(1 / 1000000)
         if points:

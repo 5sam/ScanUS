@@ -1,4 +1,4 @@
-import math
+from math import pi
 import numpy as np
 from transform import Matrix, mult
 import cv2
@@ -10,12 +10,16 @@ try:
 except:
     pass
 
+# mtx from calib_camera_int
 CAMERA_MATRIX = np.array([[964.28823421, 0.0, 513.256418],
                           [0.0, 966.54236797, 372.50558502],
                           [0.0, 0.0, 1.0]])
+# dst from calib_camera_int
 DISTORTION_COEFF = np.array([[1.79814569e-01, -9.43894922e-01, -9.48703974e-04, 8.58610402e-04, 1.56358136e+00]])
+
+# output of calib_camera_ext
 CAMERA_POS = [-14.56, 352.77, 103.44]
-CAMERA_ANGLES = [0, 0, -3.14]
+CAMERA_ANGLES = [0, 0, pi]
 
 
 def normalize_2D_point(x=0, y=0):
@@ -24,7 +28,7 @@ def normalize_2D_point(x=0, y=0):
     y = y - center[1]
     return x, y
 
-
+# transform image point to vector using intrinsic parameters
 def get_red_dot_vector_from_cam(x=0, y=0):
     # x,y = normalize_2D_point(x,y)
     # A = RB
@@ -43,9 +47,10 @@ def get_red_dot_vector_from_cam(x=0, y=0):
     v_red_dot_cam_ref[2] = -v_red_dot_cam_ref[2]
     return v_red_dot_cam_ref
 
-
-def get_red_dot_point_vector_in_world(angle_table=0, x_image=0, y_image=0):
-    m_cam_ext = get_camera_ext_matrix(angle_table)
+# get the line(point,vector) of the line from camera to point in the world
+def get_red_dot_point_vector_in_world(angle_table=0, x_image=0, y_image=0, cam_pos=CAMERA_POS,
+                                      cam_angles=CAMERA_ANGLES):
+    m_cam_ext = get_camera_ext_matrix(angle_table, cam_pos, cam_angles)
     point = m_cam_ext.get_pos()
     v_red_dot_cam_ref = get_red_dot_vector_from_cam(x_image, y_image)
     m_red_dot_cam_ref = Matrix(pos=v_red_dot_cam_ref)
@@ -55,7 +60,7 @@ def get_red_dot_point_vector_in_world(angle_table=0, x_image=0, y_image=0):
     vector = list(p_red_dot_world_ref - p_cam_world_ref)
     return point, vector
 
-
+# find the position of the camera in world
 def get_camera_ext_matrix(angle_table=0, cam_pos=CAMERA_POS, cam_angles=CAMERA_ANGLES):
     # The camera ext matrix should have its coordinate system with
     # the y axis pointing through the center of the image
@@ -65,6 +70,7 @@ def get_camera_ext_matrix(angle_table=0, cam_pos=CAMERA_POS, cam_angles=CAMERA_A
     return result_matrix
 
 
+# locates the center on the brigthest blob
 def find_red_dot(frame, show=False):
     if len(frame) < 1:
         return 0, 0, True
@@ -105,7 +111,7 @@ def find_red_dot(frame, show=False):
     else:
         return 0, 0, True
 
-
+# initiate the picamera
 def init_picamera():
     camera = PiCamera()
     camera.resolution = (1024, 768)
@@ -120,14 +126,15 @@ def init_picamera():
     camera.start_preview()
     return camera
 
-
+# self explanatory
 def take_one_picture_pi(camera):
     image = np.empty((768, 1024, 3), dtype=np.uint8)
     camera.capture(image, 'bgr')
     image = image.reshape((768, 1024, 3))
     return image
 
-
+# takes multiple pictures using enter to take picture and q to exit
+# names pictures with index and put in specified folder
 def take_pictures_pi():
     with PiCamera() as camera:
         camera.resolution = (1024, 768)
@@ -144,6 +151,7 @@ def take_pictures_pi():
             pass
 
 
+# transform contour to x,y center of contour
 def getcenter(contour):
     M = cv2.moments(contour)
     center_x = M['m10'] / M['m00']

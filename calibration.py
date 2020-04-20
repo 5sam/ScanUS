@@ -75,13 +75,15 @@ def calib_camera_ext(filename_table_img):
                     transform.intersect(points_in_world[i], img_points_vectors[i], points_in_world[j],
                                         img_points_vectors[j]))
 
-    sum = [0,0,0,0]
+    average_point = [0, 0, 0]
+    error = 0
     for k in intersection_points:
         print(k)
-        sum = [sum[i] + (k[0][i])/len(intersection_points) for i in range(3)]
-
-    print(sum)
-
+        average_point = [average_point[i] + (k[0][i]) / len(intersection_points) for i in range(3)]
+        error = error + k[1]/ len(intersection_points)
+    print('Point: ', average_point)
+    print('Error :', error)
+    return average_point , error
 
 
 def find_points(filename_table_img):

@@ -7,7 +7,10 @@ import time
 # line under is for raspberrypi
 # COMMUNICATION_PORT = serial.Serial('/dev/ttyACM0', 9600, timeout=.3)
 # line under is for PC
-COMMUNICATION_PORT = serial.Serial('COM6', 9600, timeout=.3)
+try:
+    COMMUNICATION_PORT = serial.Serial('COM6', 9600, timeout=.3)
+except:
+    print('Could not connect to OpenCR')
 
 
 # motor 1 is for the plate
@@ -40,7 +43,7 @@ def get_angle_motor(motor_number):
 
 # start the motor at designated speed, speed must be between 0 and 265, input normal or reverse for sens
 # example: start_motor(1,200,"reverse")
-def start_motor(motor_number, speed, sens):
+def start_motor(motor_number, speed = '10', sens = 'normal'):
     if sens == "reverse":
         speed = speed + 1000
     bytenumber = str(motor_number) + "-start-" + str(speed) + "\n"

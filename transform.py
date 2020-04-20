@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-
+# object used to calculate transformation matrices
 class Matrix:
     # Angles computation order is angle_z -> angle_y -> angle_x
     def __init__(self, pos=[0, 0, 0], angles=[0, 0, 0], matrix=None):
@@ -56,6 +56,9 @@ def mult(matrices):
     return Matrix(matrix=result)
 
 
+# find intersection of two lines
+# gets closest point to two lines if lines don't touch
+# and get 'error' (minimum distance between both lines)
 def intersect(point_1=np.array([0, 0, 0]), vecteur_1=np.array([0, 0, 0]), point_2=np.array([0, 0, 0]),
               vecteur_2=np.array([0, 0, 0])):
     # P1 + t1*V1 + t3*V3 = P2 + t2*V2

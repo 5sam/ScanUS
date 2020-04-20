@@ -31,7 +31,7 @@ def get_tower_matrix(angle_tower=0):
     variable_matrix = Matrix(pos=[0, 0, height])
     return mult([fixed_matrix, variable_matrix])
 
-
+# gets line (matrix) of line in world
 def get_laser_line_in_world(angle_table=0, angle_tower=0, angle_wrist=0):
     floor_matrix = Matrix(angles=[0, 0, angle_table])
     wrist_matrix = get_wrist_matrix(angle_wrist)
@@ -39,7 +39,7 @@ def get_laser_line_in_world(angle_table=0, angle_tower=0, angle_wrist=0):
     laser_matrix = mult([floor_matrix, tower_matrix, wrist_matrix])
     return laser_matrix
 
-
+# transform line(matrix) to line(point,vector)
 def get_laser_point_vector_in_world(angle_table=0, angle_tower=0, angle_wrist=0):
     laser_matrix_world = get_laser_line_in_world(angle_table, angle_tower, angle_wrist)
     point = laser_matrix_world.get_pos()

@@ -24,23 +24,26 @@
   #define DEVICE_NAME ""
 #endif   
 
+//DXL_ID1 motor id for the rotative scoop (XM) 101
+//DXL_ID2 motor id for the endless screw (XL) 224
+//DXL_ID3 motor id for the laser (XM) 110
 #define NOMBRE_TIC 4096
 #define BAUDRATE   57600
-#define DXL_ID     101
+#define DXL_ID1    101
+#define DXL_ID2    224
+#define DXL_ID3    110
+//to set up the laser ON and OFF
+#define laser_pin 4 // pin 4 on board
+#define laser_5V  6 // pin 6 on board
 
 DynamixelWorkbench dxl_wb;
 
-void setup() 
+//initiate and test if the designated motor respond
+void init_motor(int motor)
 {
-  Serial.begin(9600);
-  while(!Serial); // Wait for Opening Serial Monitor
-
+  uint16_t model_number = 0;
   const char *log;
   bool result = false;
-
-  uint8_t dxl_id = DXL_ID;
-  uint16_t model_number = 0;
-
   result = dxl_wb.init(DEVICE_NAME, BAUDRATE, &log);
   if (result == false)
   {
@@ -50,10 +53,10 @@ void setup()
   else
   {
     Serial.print("Succeeded to init : ");
-    Serial.println(BAUDRATE);  
+    Serial.println(BAUDRATE);
   }
 
-  result = dxl_wb.ping(dxl_id, &model_number, &log);
+  result = dxl_wb.ping(motor, &model_number, &log);
   if (result == false)
   {
     Serial.println(log);
@@ -63,11 +66,11 @@ void setup()
   {
     Serial.println("Succeeded to ping");
     Serial.print("id : ");
-    Serial.print(dxl_id);
+    Serial.print(motor);
     Serial.print(" model_number : ");
     Serial.println(model_number);
   }
-  result = dxl_wb.wheelMode(dxl_id, 0, &log);
+  result = dxl_wb.wheelMode(motor, 0, &log);
   if (result == false)
   {
     Serial.println(log);
@@ -78,71 +81,208 @@ void setup()
     Serial.println("Succeed to change wheel mode");
   }
 }
-// change the received command into an integer from 1 to 4
-int convert_command(String command) {
-    //Serial.println(command);
-    int command_number;
-    if (command=="run\n") {
-      command_number = 1;
-    }
-    else if (command=="stop\n") {
-      command_number = 2;
-    }
-    else if (command=="restart\n") {
-      command_number = 3;
-    }
-    else {
-      command_number = 4;
-    }
-    return command_number;
+
+//convert a string to an int
+int motor_number_to_int(String motor_number)
+{
+  if (motor_number == "1"){
+    return DXL_ID1;
+  }
+  if (motor_number == "2"){
+    return DXL_ID2;
+  }
+  if (motor_number == "3"){
+    return DXL_ID3;
+  }
+  else {
+    Serial.println("wrong motor number input");
+    return -1;
+  }
+}
+
+//convert a string to an int
+int motor_command_to_int(String motor_command)
+{
+  if (motor_command == "start"){
+    return 1;
+  }
+  if (motor_command == "stop"){
+    return 2;
+  }
+  if (motor_command == "restart"){
+    return 3;
+  }
+  if (motor_command == "position"){
+    return 4;
+  }
+  if (motor_command == "level"){
+    return 5;
+  }
+  else {
+    return 6;
+  }
+}
+
+//convert a string to an int
+int motor_argument_to_int(String motor_argument)
+{
+  int argument = motor_argument.toInt();
+  return argument;
+}
+
+void laser_ON(){
+  digitalWrite(laser_pin, HIGH);
+}
+
+void laser_OFF(){
+ digitalWrite(laser_pin, HIGH);
+}
+
+void setup()
+{
+  Serial.begin(9600);
+  // uncomment next line to wait for Opening Serial Monitor
+  //while(!Serial);
+  uint8_t dxl_id1 = DXL_ID1;
+  uint8_t dxl_id2 = DXL_ID2;
+  uint8_t dxl_id3 = DXL_ID3;
+  init_motor(dxl_id1);
+  init_motor(dxl_id2);
+  init_motor(dxl_id3);
+  pinMode(laser_pin, OUTPUT);
+  pinMode(laser_5V, OUTPUT);
+  digitalWrite(laser_5V, HIGH);
+  laser_OFF();
 }
 
 void loop() {
-  uint8_t dxl_id = DXL_ID;
+  float angle = 0;
+  uint8_t dxl_id1 = DXL_ID1;
+  uint8_t dxl_id2 = DXL_ID2;
+  uint8_t dxl_id3 = DXL_ID3;
   int32_t Position = 0;
-
+  int32_t Position1 = 0;
+  int32_t Position2 = 0;
+  int32_t Position3 = 0;
+  
   //get the command from serial port
   if (Serial.available() > 0) {
-    String command = Serial.readString();
-    int command_number = convert_command(command);
-    switch (command_number){
+    String command_received = Serial.readString();
+    if(command_received != 0){
+      //*************************************************************
+      int n = command_received.length();
+      // declaring character array
+      char char_array[n + 1];
+      // copying the contents of the
+      // string to char array
+      strcpy(char_array, command_received.c_str());
+      const char s[2] = "-";
+      char *token;
+      String info_command[3];
 
-      //start
-      case 1:
-        //Serial.println("Running");
-        dxl_wb.wheelMode(dxl_id, 0);
-        dxl_wb.goalVelocity(dxl_id, (int32_t)10);
-        break;
+      /* get the first token */
+      token = strtok(char_array, s);
+      info_command[0] = token;
+      int command_number = 1;
+      /* walk through other tokens */
+      while ( token != NULL ) {
+         token = strtok(NULL, s);
+         info_command[command_number] = token;
+         command_number = command_number + 1;
+         if (command_number == 3){
+           token = NULL;
+         }
+      }
+      //***************************************************************
+      String motor_number = info_command[0];
+      String motor_command = info_command[1];
+      String motor_argument = info_command[2];
 
-      //stop
-      case 2:
-        //Serial.println("Stop");
-        dxl_wb.wheelMode(dxl_id, 0);
-        dxl_wb.goalVelocity(dxl_id, (int32_t)0);
-        break;
+      //convert string to int
+      int motor_number_int = motor_number_to_int(motor_number);
+      int motor_command_int = motor_command_to_int(motor_command);
+      int motor_argument_int = motor_argument_to_int(motor_argument);
 
-      //restart
-      case 3:
-        //Serial.println("Restarting");
-        dxl_wb.jointMode(dxl_id, 0, 0);
-        dxl_wb.goalPosition(dxl_id, (int32_t)0);
-        break;
+      switch (motor_command_int) {
 
-      //error in the command
-      case 4:
-        //Serial.println("Wrong command");
-        break;
+        //start
+        case 1:
+          laser_ON();
+          if (motor_argument_int > 500){
+             motor_argument_int = 1000 - motor_argument_int;
+          }
+          dxl_wb.wheelMode(motor_number_int, 0);
+          dxl_wb.goalVelocity(motor_number_int, (int32_t)motor_argument_int);
+          break;
 
-      default:
-        Serial.println("Should not be able to come here");
+        //stop
+        case 2:
+          laser_OFF();
+          dxl_wb.wheelMode(motor_number_int, 0);
+          dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+          break;
+
+        //restart
+        case 3:
+          laser_OFF();
+          dxl_wb.jointMode(motor_number_int, 0, 0);
+          dxl_wb.goalPosition(motor_number_int, (int32_t)0);
+          break;
+
+         //go_to_position
+        case 4:
+          dxl_wb.jointMode(motor_number_int, 0, 0);
+          dxl_wb.goalPosition(motor_number_int, (int32_t)motor_argument_int);
+          break;
+
+          //level
+        case 5:
+            dxl_wb.getPresentPositionData(motor_number_int, &Position);
+            angle = Position*2*PI/NOMBRE_TIC;
+            Serial.println(Position);
+            if (angle < motor_argument_int){
+              dxl_wb.wheelMode(motor_number_int, 0);
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)100);
+              while (angle + 0.25 < motor_argument_int){
+                dxl_wb.getPresentPositionData(motor_number_int, &Position);
+                angle = Position*2*PI/NOMBRE_TIC;
+                Serial.println(angle);
+              }
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+            }
+            else {
+              dxl_wb.wheelMode(motor_number_int, 0);
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)-100);
+              while (angle - 0.25 > motor_argument_int){
+                dxl_wb.getPresentPositionData(motor_number_int, &Position);
+                angle = Position*2*PI/NOMBRE_TIC;
+                Serial.println(angle);
+              }
+              dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+            }
+          dxl_wb.goalVelocity(motor_number_int, (int32_t)0);
+          break;
+          
+        case 6:
+          Serial.println("wrong motor command");
+          break;
+      }
     }
   }
   else{
     //send the motor angle through the serial port
-    dxl_wb.getPresentPositionData(dxl_id, &Position);
-    Position = Position%4095;
-    float angle = Position*2*PI/NOMBRE_TIC;
-    Serial.println(angle);
+    dxl_wb.getPresentPositionData(dxl_id1, &Position1);
+    dxl_wb.getPresentPositionData(dxl_id2, &Position2);
+    dxl_wb.getPresentPositionData(dxl_id3, &Position3);
+    Position1 = Position1%4095;
+    Position2 = Position2;
+    Position3 = Position3%4095;
+    float angle1 = Position1*2*PI/NOMBRE_TIC;
+    float angle2 = Position2*2*PI/NOMBRE_TIC;
+    float angle3 = Position3*2*PI/NOMBRE_TIC;
+    Serial.println(angle1);
+    Serial.println(angle2);
+    Serial.println(angle3);
     delay(10);
     }
 }
